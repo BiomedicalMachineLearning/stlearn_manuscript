@@ -1,0 +1,18 @@
+cd ~/gih/spa/cc/cpdb
+source cpdb-venv/bin/activate
+cp *.tsv $TMPDIR
+cd $TMPDIR
+cp -r ~/gih/spa/cc/cpdb/cellphonedb*0 .
+
+# generate matrix.tsv (transform from MEX using R) and cluster.tsv from visium analysis data
+export LC_ALL=en_US.utf-8
+export LANG=en_US.utf-8
+cellphonedb method statistical_analysis clusters.tsv matrix.tsv --database $TMPDIR/cellphonedb-data-2.0.0/cellphone.db# cellphonedb plot dot_plot
+# cellphonedb plot heatmap_plot clusters.tsv
+
+# copy all results back to non-temporary folder
+mkdir ~/gih/spa/cc/cpdb/results
+cp *tsv ~/gih/spa/cc/cpdb/results/
+cp -r out ~/gih/spa/cc/cpdb/results/
+
+# after cellphoneDB finishes calculating significance for all ligand-receptor pairs, plot the spatial expression for those top ranked ligand-receptor pairs
