@@ -1,19 +1,22 @@
-#(21/09/21) -> Predicting CCIs using CellChat for comparison with stlearn; point
+# Predicting CCIs using CellChat for comparison with stlearn; point
 #                is to show that CellChat will predict interactions for cell
 #                types which never spatially co-occur.
 #
 #                INPUT: * /Volumes/GML001-Q1851/Brad/
 #                               breast_bgPerLR_lrsubset_spotsubset_noBgs.h5ad
-#                        * data/label_transfer_bc.csv
-#                OUTPUT: * data/method_comp/breast/cellchat*
-#                        * plots/method_comp/cellchat*
+#                        * data/breast/label_transfer_bc.csv
+#                OUTPUT: * data/breast/cellchat*
+#                        * plots/X1_method_comp/cellchat*
 
 ################################################################################
                         # Environment setup #
 ################################################################################
-work_dir <- "/Users/uqbbalde/Desktop/Uni_Studies/projects/stLearn/"
+# TODO: NOTE must be run in the base directory: stlearn_reproduce_results/
+# TODO update this with your path
+work_dir = '/Users/uqbbalde/Desktop/Uni_Studies/projects/SpatialTranscriptomics/stlearn_reproduce_results/' 
 setwd(work_dir)
 
+# If using a conda environment
 Sys.setenv(RETICULATE_PYTHON = "~/opt/miniconda3/envs/STI/bin/python/")
 library(CellChat)
 library(reticulate)
@@ -24,10 +27,9 @@ library(reticulate)
 ad <- import('anndata')
 
 data_dir <- '/Volumes/GML001-Q1851/Brad/'
-data_dir2 <- 'data/'
-st_db_dir <- '/Users/uqbbalde/Desktop/Uni_Studies/myPython/stlearn_latest/stLearn/stlearn/tools/microenv/cci/databases/'
-out_dir <- 'data/method_comp/breast/cellchat_'
-out_plots <- 'plots/method_comp/cellchat_'
+data_dir2 <- 'data/breast/'
+out_dir <- 'data/breast/cellchat_'
+out_plots <- 'plots/X1_method_comp/cellchat_'
 
 data_set <- 'breast'
 
@@ -38,7 +40,6 @@ ad_ <- ad$read_h5ad(paste0(data_dir, 'breast_bgPerLR_lrsubset_spotsubset_noBgs.h
 
 # Getting the normalised expression #
 expr <- t(ad_$to_df())
-rownames(expr) <- str_replace_all(rownames(expr), prefix, '')
 
 # Getting the cell meta information #
 meta <- as.data.frame(ad_$obs)
@@ -57,15 +58,13 @@ cellchat <- createCellChat(object = expr, meta = meta, group.by = "cell_type")
 CellChatDB <- CellChatDB.human
 
 # Checking overlap with current stlearn NATMI database #
-st_db <- read.table(paste0(st_db_dir, 'connectomeDB2020_lit.txt'), 
-                    sep='\t', header=T)
-st_lrs <- str_c(st_db[,1], st_db[,2], sep='_')
+st_lrs <- rownames(ad_$uns[['lr_summary']])
 
 cc_lrs <- as.character(CellChatDB$interaction$interaction_name)
 
-overlap <- intersect(st_lrs, cc_lrs) # 545 overlap
-cc_only <- setdiff(cc_lrs, st_lrs) # 1476
-st_only <- setdiff(st_lrs, cc_lrs) # 1748
+overlap <- intersect(st_lrs, cc_lrs) # 86 overlap
+cc_only <- setdiff(cc_lrs, st_lrs) # 1853
+st_only <- setdiff(st_lrs, cc_lrs) # 463
 
 ######## This overall suggests that will need to add the connectomeDB to 
 ######## CellChat for a fair comparison of methods.
@@ -129,7 +128,7 @@ cellchat <- identifyOverExpressedInteractions(cellchat)
                   # Inference of CellChat CCI #
 ################################################################################
 # Inferring CCIs #
-cellchat <- computeCommunProb(cellchat) #nboot defines permutations. 
+cellchat <- computeCommunProb(cellchat)
 
 # Filter out the cell-cell communication if there are only few number of cells 
 # in certain cell groups
@@ -167,7 +166,7 @@ for (i in 1:nrow(mat)) {
 dev.off()
 
 ################################################################################
-# Visualising per LR CCI results #
+                    # Visualising per LR CCI results #
 ################################################################################
 df.net <- subsetCommunication(cellchat) # Retrieves the results as a dataframe.
 
@@ -184,7 +183,7 @@ print("IL34_CSF1R" %in% cc_lrs)
 print("IL34_CSF1R" %in% sig_int_lrs)
 # NOTE: was not significant & was present in the CC LR database #
 
-############### Visualising the networks for LRs of interest ########################
+############# Visualising the networks for LRs of interest #####################
 for (i in 1:length(sig_int_lrs)){
   lr_ <- sig_int_lrs[i]
   
@@ -205,15 +204,6 @@ for (i in 1:length(sig_int_lrs)){
                        )
   dev.off()
 }
-
-#### Overall view equivalent to what is generated for stLearn ####
-pairLR.use <- as.data.frame(int_lrs)
-colnames(pairLR.use) <- c('interaction_name')
-
-# This function dosn't seem to work.... #
-netVisual_bubble(cellchat, pairLR.use = pairLR.use, remove.isolate = T, 
-                 group=c(1,2,2)
-)
 
 # Saving the results #
 write.table(df.net, file=paste0(out_dir, data_set, '_interaction_data.txt'),

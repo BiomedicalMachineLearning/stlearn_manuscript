@@ -6,10 +6,13 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import scanpy as sc
+import squidpy as sq
 import matplotlib.pyplot as plt
 from numba import njit, jit, prange
 from numba.typed import List
 from collections import defaultdict
+
+from stlearn.tools.microenv.cci.het_helpers import get_neighbourhoods
 
 import stlearn.plotting.cci_plot_helpers as cci_hs
 from scipy.spatial.distance import euclidean, canberra
@@ -69,15 +72,23 @@ def get_cci_nlr_ranked(cci_set, cci_summary, method):
 
     return ccis_ranked, cci_nlrs_ranked, cci_lrs_ranked
 
-def get_cands(perfect, cci_set, methods, method_ccis_ranked):
+def get_cands(perfect, cci_set, methods, method_ccis_ranked, method_ccis_stats):
     """Gets candidate difference between stLearn and other methods by measuring \
         distance from perfect.
     """
     cci_scores = []
+    max_rank = len(method_ccis_stats[0])
     for i, cci in enumerate(cci_set):
         cci_ranks = []
         for j in range(len(methods)):
-            cci_ranks.append(np.where(method_ccis_ranked[j] == cci)[0][0])
+            if cci not in method_ccis_ranked[j]:
+                cci_ranks.append( max_rank )
+                continue
+
+            rank = np.where(method_ccis_ranked[j] == cci)[0][0]
+            # account for equal rank toward end of list #
+            rank = max_rank if method_ccis_stats[j][rank]==0 else rank
+            cci_ranks.append( rank )
         score = euclidean(perfect, cci_ranks)
         cci_scores.append(score)
     cand_ccis = cci_set[np.argsort(cci_scores)]
@@ -92,21 +103,23 @@ def plot_ranked(rot, methods, int_lrs, int_lr_stat, x_label, y_label,
     for method in methods[::-1]:
         i = np.where(np.array(methods) == method)[0][0]
         lrs_ranked, stat_ranked = int_lrs[i], int_lr_stat[i]
+        if type(highlight_lrs)!=type(None):
+            highlight_lrs_ = [lr for lr in highlight_lrs if lr in lrs_ranked]
         cci_hs.rank_scatter(lrs_ranked, stat_ranked, rot=rot,
                             x_label= x_label, y_label=y_label,
                             color=method_colors[i], ax=ax,
-                            highlight_items=highlight_lrs, show_text=True,
+                            highlight_items=highlight_lrs_, show_text=True,
                             show=False)
     return fig, ax
 
 
 def plot_ranked_wHists(int_lrs, int_lr_stat, methods, highlight_lr,
-                       height=8, rot=2):
+                        method_map, color_dict_, height=8, rot=2):
     """ Plotting the ranked data with histograms showing the densities.
     """
     index = ['lrs', 'stats', 'rank', 'method']
-    method_map = {'': 'stLearn', '_NATMI': 'NATMI', '_cellchat': 'CellChat',
-                  '_scsignalr': 'scSignalR'}
+    # method_map = {'': 'stLearn', '_NATMI': 'NATMI', '_cellchat': 'CellChat',
+    #               '_scsignalr': 'scSignalR'}
     dfs = [
         pd.DataFrame([int_lrs[i], int_lr_stat[i], np.argsort(-int_lr_stat[i]),
                       [method_map[method]] * len(int_lr_stat[i])],
@@ -114,8 +127,13 @@ def plot_ranked_wHists(int_lrs, int_lr_stat, methods, highlight_lr,
         for i, method in enumerate(methods)]
     all_df = pd.concat(dfs)
 
-    color_dict = {'stLearn': 'gold', 'NATMI': 'hotpink', 'CellChat': 'darkcyan',
-                  'scSignalR': 'limegreen'}
+    # Ensuring same ordering as input methods.. #
+    # color_dict_ = {'stLearn': 'gold', 'NATMI': 'hotpink', 'CellChat': 'darkcyan',
+    #               'scSignalR': 'limegreen'}
+    color_dict = {}
+    for method in methods:
+        color_dict[method_map[method]] = color_dict_[method_map[method]]
+
     multivariateGrid('rank', 'stats', 'method', all_df,
                          color_dict=color_dict,
                          show=False, height=height)
@@ -125,10 +143,13 @@ def plot_ranked_wHists(int_lrs, int_lr_stat, methods, highlight_lr,
         method_loc = all_df.loc[:, 'method'].values.astype(str) == method
         lr_loc = all_df.loc[:, 'lrs'].values.astype(str) == highlight_lr
         loc_bool = np.logical_and(method_loc, lr_loc)
+        if not np.any(loc_bool):
+            continue
 
         x, y = all_df.loc[loc_bool, 'rank'], all_df.loc[loc_bool, 'stats']
-        plt.scatter([x], [y], alpha=.8, c='red',
-                    edgecolors='none',
+        plt.scatter([x], [y], alpha=1,
+                    c=color_dict[method], s=200, #'red',
+                    edgecolors='dimgray',
                     )
 
         lr_text_fp = {'weight': 'bold', 'size': 12}
@@ -155,7 +176,10 @@ def multivariateGrid(col_x, col_y, col_k, df, color_dict=None,#k_is_color=False,
     )
     color = None
     legends = []
-    for name, df_group in df.groupby(col_k):
+    #for name, df_group in df.groupby(col_k):
+    for name in color_dict:
+        group_bool = df.loc[:,col_k].values == name
+        df_group = df.loc[group_bool,:]
         legends.append(name)
         if color_dict:
             color = color_dict[name]
@@ -189,7 +213,7 @@ def multivariateGrid(col_x, col_y, col_k, df, color_dict=None,#k_is_color=False,
     if show:
         plt.show()
 
-def plot_cci(int_cci, int_lr, data, colors):
+def plot_cci(int_cci, int_lr, data, colors, sig=False):
     """ Plots cci predicted to interact via given lr.
     """
     l, r = int_lr.split('_')
@@ -200,11 +224,27 @@ def plot_cci(int_cci, int_lr, data, colors):
     labels = data.obs['cell_type'].values.astype(str)
     l_bool = expr.loc[:, l].values.astype(float) > 0
     r_bool = expr.loc[:, r].values.astype(float) > 0
+    both_bool = np.logical_and(l_bool, r_bool)
     send_bool = labels == sender
     targ_bool = labels == target
+    if sig: # Subsetting to significant hotspots & neighbours for stLearn #
+        neighbours = list(get_neighbourhoods(data)[0])
+        lr_index = np.where(data.uns['lr_summary'].index.values==int_lr)[0][0]
+        sig_spots = data.obsm['lr_sig_scores'][:, lr_index] > 0
+        sig_spot_indices = np.where( sig_spots )[0]
+        for index in sig_spot_indices:
+            neigh_indices = neighbours[index]
+            sig_spots[neigh_indices] = True
+
+        l_bool = np.logical_and(l_bool, sig_spots)
+        r_bool = np.logical_and(r_bool, sig_spots)
 
     cci_lr_labels = []
     for i in range(data.shape[0]):
+        # if send_bool[i] and both_bool[i]:
+        #     cci_lr_labels.append(f'{l}_{r}--{sender}')
+        # elif targ_bool[i] and both_bool[i]:
+        #     cci_lr_labels.append(f'{l}_{r}--{target}')
         if send_bool[i] and l_bool[i]:
             cci_lr_labels.append(f'{l}--{sender}')
         # elif send_bool[i]:
@@ -248,4 +288,38 @@ def get_dists(sources, targets, labels, l_bool, r_bool, spatial):
                 method_dists.append( dist )
 
     return method_dists
+
+################################################################################
+                        # Multi-comp Version 3 #
+################################################################################
+def run_cci_squid(data, cci, labels, ):
+    """ Running squidpy colocalisation for given CCI.
+    """
+    send_bottom, targ_bottom = cci.split('->')
+    bottom_labels = labels.copy()
+    bottom_labels[np.logical_and(labels!=send_bottom, labels!=targ_bottom)] = ''
+
+    label_key = 'labels'
+    data.obs[label_key] = bottom_labels
+    data.obs[label_key] = data.obs[label_key].astype('category')
+
+    # Performing squidpy enrichment
+    sq.gr.co_occurrence(data, cluster_key=label_key)
+    sq.pl.co_occurrence(data,
+        cluster_key=label_key,
+        clusters=send_bottom,
+        figsize=(8, 4),
+    )
+    # Getting the max point.. #
+    label_set = data.obs[label_key].cat.categories.values.astype(str)
+    i_loc = np.where(label_set == send_bottom)[0][0]
+    j_loc = np.where(label_set == targ_bottom)[0][0]
+    max_loc = np.argmax(data.uns[f'{label_key}_co_occurrence']['occ'][i_loc,j_loc,:])
+    max_val = max(data.uns[f'{label_key}_co_occurrence']['occ'][i_loc,j_loc,:])
+    max_dist = data.uns[f'{label_key}_co_occurrence']['interval'][max_loc]
+    print(max_val) # 1.4371388
+
+
+
+
 

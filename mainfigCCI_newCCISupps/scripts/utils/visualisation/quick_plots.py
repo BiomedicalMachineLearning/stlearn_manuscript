@@ -8,9 +8,8 @@ import upsetplot
 import matplotlib
 import matplotlib.pyplot as plt
 
-import beautifulcells.visualisation.helpers as vhs
-
-import beautifulcells.visualisation.quick_helpers as qhs
+import scripts.utils.visualisation.helpers as vhs
+import scripts.utils.visualisation.quick_helpers as qhs
 
 fp = {'weight': 'bold', 'size': 12}
 

@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import numpy
 import collections
 
-import beautifulcells.utils.inputHelpers as input
-import beautifulcells.utils.calculations as calcs
+import scripts.utils.inputHelpers as input
+import scripts.utils.calculations as calcs
 
 def dealWithPlot(savePlot, showPlot, closePlot, folder, plotName, dpi,
 				 tightLayout=True):
