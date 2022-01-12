@@ -7,16 +7,16 @@ Spatial Transcriptomics (ST) is an emerging technology that adds spatial dimensi
  
 ####   Mapping cell types/
 
-- [Main Figure 2, 3 - clustering](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Figure2/stSME_clustering.ipynb) - [ipynb]
+- [Main Figure 2, 3 - clustering](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_2_SME/stSME_clustering.ipynb) - [ipynb]
 
-- [Main Figure 2, 3 - comparison](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Figure2/stSME_comparison.ipynb) - [ipynb]
+- [Main Figure 2, 3 - comparison](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_2_SME/stSME_comparison.ipynb) - [ipynb]
 
 ####  Spatio-temporal trajectories/
                     
-- [Figure 4 - Traumatic brain injury](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure4_and_TBI_related_SupFig_/TBI_related_fig.ipynb) - [ipynb]
-- [Figure 5 - Breast cancer progression](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/FigS9-10-11-BCBArelated/PSTS_tutorial.ipynb) - [ipynb]
-- [Figure 5 - Neuronal development](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/FigS12-Embryo/PSTS_Embryo.ipynb) - [ipynb]
+- [Figure 4 - Traumatic brain injury](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_4_PSTS_TBI/TBI_related_fig.ipynb) - [ipynb]
+- [Figure 5 - Breast cancer progression](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_5_PSTS_Cancer_progression/PSTS_tutorial.ipynb) - [ipynb]
+- [Figure 5 - Neuronal development](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_5_PSTS_Neuronal_development/PSTS_Embryo.ipynb) - [ipynb]
 
 ####  Cell-cell interactions/
 
-- [Figure 6](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/tree/main/mainfigCCI_newCCISupps) - [tutorial]
+- [Figure 6 - CCI](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/tree/main/Main_figure_6_CCI_with_Sup) - [tutorial]
