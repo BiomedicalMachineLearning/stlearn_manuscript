@@ -1,8 +1,8 @@
 """
-Running the stlearn LR-CCI analyses on the seqFISH data.
+Running the stlearn LR-CCI analyses on the slideSeq data.
 
-         INPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz.h5ad
-         OUTPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz_LR-CCI.h5ad
+         INPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/slideSeq/hipp.h5ad
+         OUTPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/slideSeq/hipp_LR-CCI.h5ad
 """
 
 ################################################################################
@@ -14,30 +14,36 @@ work_dir = '/Users/uqbbalde/Desktop/Uni_Studies/projects/stlearn_manuscript/main
 import os
 os.chdir(work_dir)
 
+import numpy as np
+import pandas as pd
+import anndata as ad
 import scanpy as sc
+from PIL import Image
+import matplotlib.pyplot as plt
+
 import stlearn as st
 
-data_dir = '/Volumes/GML001-Q1851/Brad/seqFISH/'
+data_dir = '/Volumes/GML001-Q1851/Brad/slideSeq/slideSeq/'
 out_dir = data_dir
 
 ################################################################################
-                     # Loading the data #
+                        # Loading the data #
 ################################################################################
-data = sc.read_h5ad(data_dir+'svz.h5ad')
+data = sc.read_h5ad(data_dir+'hipp.h5ad')
 
 ################################################################################
                      # Running the LR analysis #
 ################################################################################
 # Loading the LR databases available within stlearn (from NATMI)
-lrs = st.tl.cci.load_lrs(['connectomeDB2020_lit'], species='mouse')
+lrs = st.tl.cci.load_lrs(['connectomeDB2020_lit'], species='human')
 print(len(lrs))
 
 # Running the analysis #
 st.tl.cci.run(data, lrs,
-                  min_spots = 3, #Filter out any LR pairs with no scores for less than min_spots
-                  distance=145, # None defaults to spot+immediate neighbours; distance=0 for within-spot mode
+                  min_spots = 50, #Filter out any LR pairs with no scores for less than min_spots
+                  distance=40, # None defaults to spot+immediate neighbours; distance=0 for within-spot mode
                   n_pairs=10000, # Number of random pairs to generate; low as example, recommend ~10,000
-                  n_cpus=2, # Number of CPUs for parallel. If None, detects & use all available.
+                  n_cpus=3, # Number of CPUs for parallel. If None, detects & use all available.
                   )
 
 lr_info = data.uns['lr_summary'] # A dataframe detailing the LR pairs ranked by number of significant spots.
@@ -58,6 +64,14 @@ st.tl.cci.run_cci(data, 'cell_type', # Spot cell information either in data.obs 
 ################################################################################
                # Saving the results for visualisation later #
 ################################################################################
-#data.write_h5ad(out_dir+'svz_LR-CCI.h5ad', compression='gzip')
-data.write_h5ad(out_dir+'svz2_LR-CCI.h5ad', compression='gzip')
+# data.write_h5ad(out_dir+'hipp_LR-CCI.h5ad', compression='gzip')
+data.write_h5ad(out_dir+'hipp_LR-CCI_rep.h5ad', compression='gzip')
+
+
+
+
+
+
+
+
 

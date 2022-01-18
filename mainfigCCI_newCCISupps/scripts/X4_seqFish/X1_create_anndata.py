@@ -95,7 +95,8 @@ sc.pp.normalize_total(svz)
 ################################################################################
                     # Saving the data #
 ################################################################################
-svz.write_h5ad(out_dir+'svz.h5ad', compression='gzip')
+#svz.write_h5ad(out_dir+'svz.h5ad', compression='gzip')
+svz.write_h5ad(out_dir+'svz2.h5ad', compression='gzip')
 
 
 

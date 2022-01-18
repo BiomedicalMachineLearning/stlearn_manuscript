@@ -205,9 +205,91 @@ scripts/X3_skin_analysis/
                    * /Volumes/GML001-Q1851/Brad/skin_analysis/naiive_bg.pkl
             OUTPUT: * plots/X3_skin_analysis/COL1A1_DDR1*
 
+scripts/X4_seqFish/
+    -> From analysing the mouse sub-ventricular zone seqFISH+ data
+    
+    X1_create_anndata.py -> Creating anndata object from the seqFISH data.
 
+                    INPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/cortex_svz_*.csv
+                    OUTPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz.h5ad
+    
+    X2_run_st-lr-cc.py -> Running the stlearn LR-CCI analyses on the 
+                                                                   seqFISH data.
 
+                 INPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz.h5ad
+                 OUTPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz_LR-CCI.h5ad
+    
+    X3_vis_st-lr-cci.ipynb -> Visualises results from stlearn LR-CCI pipeline on 
+                                the SVZ SeqFish+ data.
 
+                INPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz_LR-CCI.h5ad
+                OUTPUT: * plots/X4_seqFISH/*
+    
+    X4_grid_data.py -> Runs gridding function on the seqFISH+ data, essentially 
+                        pseudobulking by neighbourhoods to improve speed with 
+                        running CCI. Then runs stlearn LR-CCI analysis.
+                    
+                INPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz.h5ad
+                OUTPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz_gridded.h5ad
+
+    X5_vis_grid.ipynb -> Visualises the results from the gridding analysis on 
+                            the SVZ seqFISH+ data
+
+                INPUT: * /Volumes/GML001-Q1851/Brad/seqFISH/svz_gridded.h5ad
+                OUTPUT: * plots/X4_seqFISH/grid_*
+
+scripts/X5_slideSeq/
+    -> Scripts from analysis the mouse hippocampus slide-seq data.
+    
+    X1_create_anndata.R -> Loads in the slide-seq data from Seurat & converts to 
+                        anndata, subsequently saving as .h5ad for later loading 
+                        in python. Also performs the Seurat label transfer onto 
+                        this data as per the vignette, using downloaded reference 
+                        scRNA-seq data.
+ 
+       INPUT: * data/slideSeq/mouse_hippocampus_reference.rds
+                 -> Downloaded from here:
+                 https://www.dropbox.com/s/cs6pii5my4p3ke3/mouse_hippocampus_reference.rds?dl=0
+              * Uses Seurat to download data of hippocampus.
+       OUTPUT: 
+              * /Volumes/GML001-Q1851/Brad/slideSeq/hipp.h5ad
+
+    X2_format_anndata.py ->  Loads in the slide-seq data & subsequently formats 
+                the spatial information and normalises data using scanpy 
+                workflow prior todownstream lr-cci analysis.
+
+                 INPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/hipp.h5ad
+                 OUTPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/hipp.h5ad
+
+    X3_run_st-lr-cci.py -> Running the stlearn LR-CCI analyses on the slideSeq.
+
+         INPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/slideSeq/hipp.h5ad
+         OUTPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/slideSeq/hipp_LR-CCI.h5ad
+
+    X4_vis_st-lr-cci.ipynb -> Visualising results from stLearn LR-CCI analysis 
+                                on the slideSeq data.
+
+            INPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/hipp_LR-CCI.h5ad
+            
+            OUTPUT: * plots/X5_slideSeq/*
+                    * /Volumes/GML001-Q1851/Brad/slideSeq/
+                                                      hipp_LR-CCI_clustered.h5ad
+
+    X5_grid_st-lr-cci.py -> Runs stLearn CCI analysis on the slide-seq data 
+                                                                 after gridding.
+
+        INPUT: * /QRISdata/Q1851/Brad/slideSeq/hipp_LR-CCI_clustered.h5ad
+        
+        OUTPUT: * /QRISdata/Q1851/Brad/slideSeq/hipp_gridded_45-45_LR-CCI.h5ad
+                * plots/X5_slideSeq/
+                
+    X6_vis_gridded-st-lr.ipynb -> Visualising the results from gridding the 
+                                               data & performing the LR analyis.
+
+            INPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/
+                                                  hipp_gridded_45-45_LR-CCI.h5ad
+        
+            OUTPUT: * plots/X5_slideSeq/*
 
 
 
