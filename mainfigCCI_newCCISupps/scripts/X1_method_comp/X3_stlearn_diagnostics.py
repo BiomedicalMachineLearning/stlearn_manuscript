@@ -10,8 +10,8 @@ and correlation of cell type abundance & interactions..
 ################################################################################
                         # Environment setup #
 ################################################################################
-# TODO: NOTE must be run in folder with README entitled StLearn Reproduce
-work_dir = '/Users/uqbbalde/Desktop/Uni_Studies/projects/stLearn/'
+# TODO change this to your directory
+work_dir = '/Users/uqbbalde/Desktop/Uni_Studies/projects/stlearn_manuscript/mainfigCCI_newCCISupps/'
 stlearn_path = '/Users/uqbbalde/Desktop/Uni_Studies/myPython/' \
                'stlearn_latest/stLearn/'
 gml_rdm_path = '/Volumes/GML001-Q1851/'
@@ -54,7 +54,7 @@ cci_plot.lr_n_spots(data, n_top=100, figsize=(10, 3),
 vhs.dealWithPlot(True, True, True, out_plots, f'lr_n_spots_top{out}', 300)
 cci_plot.lr_n_spots(data, n_top=10000, figsize=(10, 4), show=False)
 vhs.dealWithPlot(True, True, True, out_plots, f'lr_n_spots{out}', 300)
-cci_plot.lr_summary(data, highlight_lrs=int_lrs, n_top=50, show=False)
+cci_plot.lr_summary(data, highlight_lrs=int_lrs, n_top=25, show=False)
 vhs.dealWithPlot(True, True, True, out_plots, f'lr_summary{out}', 300)
 cci_plot.lr_summary(data, n_top=1000, highlight_lrs=int_lrs, figsize=(5,4),
                     show=False)

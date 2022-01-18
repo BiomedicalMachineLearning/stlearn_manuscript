@@ -94,7 +94,7 @@ scripts/X1_method_comp/
             INPUT: * /Volumes/GML001-Q1851/Brad/breast_LR&CCIResults.h5ad
             OUTPUT: * data/breast/squidpy/*
     
-    X10_method_comp_vis.py -> Multi-method comparison of CCI ranking based 
+    X10_method_comp_vis.ipynb -> Multi-method comparison of CCI ranking based 
                             on no. of significant LR pairs. Will focus on pair
                             which is highly ranked in the other methods but low-
                             ranked by stLearn as example, and show the squidpy 

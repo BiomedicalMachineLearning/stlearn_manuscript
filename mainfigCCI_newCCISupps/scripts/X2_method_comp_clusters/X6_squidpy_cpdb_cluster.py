@@ -59,5 +59,5 @@ for i, row in enumerate(pvals.index):
 
 int_df = pd.DataFrame(int_matrix, index=cell_type_set, columns=cell_type_set)
 
-int_df.to_csv(out_dir+'squidpy_ints.txt', sep='\t', header=True)
+int_df.to_csv(out_dir+'squidpy_GAPDH-ACTB_ints.txt', sep='\t', header=True)
 
