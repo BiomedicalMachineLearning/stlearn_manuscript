@@ -37,6 +37,10 @@ For information regarding R dependencies, please see:
                                     when using breast cluster information.
         
         X3_skin_analysis/ -> Scripts for analysis of the skin ST-seq data.
-                
+              
+        X4_seqFish/ -> Analysis of the mouse SVZ seqFISH+ data.
+        
+        X5_slideSeq/ > Analysis of the mouse hippocampus slide-seq data.
+              
         utils/ -> Utility scripts used across many scripts.
 

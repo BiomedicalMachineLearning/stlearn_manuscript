@@ -18,7 +18,7 @@ scripts/X1_method_comp/
                             OUTPUT: * GML001-Q1851/Brad/
                                           bgPerLR_lrsubset_spotsubset_noBgs.h5ad
     
-    X2_stlearn_cci_breast.py -> Perform stlearn CCI permutation & creating the 
+    X2_stlearn_cci_breast.ipynb -> Perform stlearn CCI permutation & creating the 
                 CCI networks and spatial CCI visualisations from stlearn analysis.
                 (Plots the GPC3_IGF1R results for main figure).
                 
@@ -28,7 +28,7 @@ scripts/X1_method_comp/
                 OUTPUT: * plots/X1_method_comp/stlearn_breast_*
                         * /Volumes/GML001-Q1851/Brad/breast_LR&CCIResults.h5ad
     
-    X3_stlearn_diagnostics.py -> Visualisation of the stlearn diagnostic plots 
+    X3_stlearn_diagnostics.ipynb -> Visualisation of the stlearn diagnostic plots 
                                 for the breast data, namely LR ranked lists, 
                                 correlation between LR expression/abundance and 
                                 significance, and correlation of cell type 
