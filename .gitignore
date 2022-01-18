@@ -1,5 +1,6 @@
 .DS_Store
 .gitignore.swp
+Main_figure_6_CCI_with_Sup/
 mainfigCCI_newCCISupps/scripts/X1_method_comp/.ipynb_checkpoints/
 mainfigCCI_newCCISupps/scripts/__pycache__/
 mainfigCCI_newCCISupps/scripts/utils/__pycache__/
