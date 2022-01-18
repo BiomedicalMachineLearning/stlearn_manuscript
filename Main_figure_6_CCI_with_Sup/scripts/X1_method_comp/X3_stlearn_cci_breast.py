@@ -83,7 +83,9 @@ st.tl.cci.run_cci(data, 'cell_type', min_spots=3,
 print(data.uns['lr_cci_raw_cell_type'].values.sum())
 
 # Writing this out #
-data.write_h5ad(data_dir+'breast_LR&CCIResults.h5ad',
+# data.write_h5ad(data_dir+'breast_LR&CCIResults.h5ad',
+#                 compression='gzip')
+data.write_h5ad(data_dir+'breast_LR&CCIResults_rep.h5ad',
                 compression='gzip')
 
 ################################################################################
@@ -127,88 +129,6 @@ for sig in [True, False]:
 """ DONE! Looks good now. 
 Sort the heatmaps of the number of interactions. 
 """
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-""" Junk code
-"""
-##### Attempt with the chord package ######
-# Ref: https://pypi.org/project/chord/
-from chord import Chord
-import matplotlib.image as img
-
-from PIL import Image
-
-# reading image
-img = Image.open('plots/ccis.png')
-
-img.thumbnail((30, 30), Image.ANTIALIAS)
-
-# bicubic used for interpolation
-imgplot = plt.imshow(img)
-plt.show()
-
-matrix = [
-    [0, 5, 6, 4, 7, 4],
-    [5, 0, 5, 4, 6, 5],
-    [6, 5, 0, 4, 5, 5],
-    [4, 4, 4, 0, 5, 5],
-    [7, 6, 5, 5, 0, 4],
-    [4, 5, 5, 5, 4, 0],
-]
-
-names = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Thriller"]
-
-png_str = Chord(matrix, names).render_png()
-
-Chord(matrix, names).to_png('plots/temp.png')
-
-img = Image.open('plots/temp.png')
-
-plt.imshow(img)
-plt.show()
-
-image = Image.frombytes("RGB", (200, 200), png_str, "raw", "BGRX")
-
-plt.imshow(image)
-plt.show()
-
-#### Attempt with the mne package #####
-from mne.viz import plot_connectivity_circle
-
-N = 20  # Number of nodes
-node_names = [f"N{i}" for i in range(N)]  # List of labels [N]
-
-# Random connectivity
-ran = np.random.rand(N,N)
-con = np.where(ran > 0.9, ran, np.nan)
-
-fig, axes = plot_connectivity_circle(con, node_names,
-    colormap='Blues', facecolor='white', textcolor='black', colorbar=False,
-    linewidth=10)
-
-
-
-
-
-
 
 
 
