@@ -41,6 +41,8 @@ For information regarding R dependencies, please see:
         X4_seqFish/ -> Analysis of the mouse SVZ seqFISH+ data.
         
         X5_slideSeq/ > Analysis of the mouse hippocampus slide-seq data.
+
+        X6_breast_cancer_simulation/ > Simulation of breast cancer data
               
         utils/ -> Utility scripts used across many scripts.
 
