@@ -5,7 +5,7 @@ Spatial Transcriptomics (ST) is an emerging technology that adds spatial dimensi
  
 ## Main parts:
  
-####   Mapping cell types/
+####   SME integrative analysis - Mapping cell types/
 
 - [Main Figure 2, 3 - clustering](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_2_SME/stSME_clustering.ipynb) - [ipynb]
 
