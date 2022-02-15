@@ -20,6 +20,7 @@ Spatial Transcriptomics (ST) is an emerging technology that adds spatial dimensi
 - [Supplementary Figure S8 - TBI](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_5_PSTS_Neuronal_development/Figure_S8.ipynb) - [ipynb]
 - [Supplementary Figure S7 and S9 - TBI](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_5_PSTS_Neuronal_development/Figure_S7_S9.ipynb) - [ipynb]
 - [Supplementary Figure S10, S11 - BCBA](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_5_PSTS_Cancer_progression/Figure_S10_S11.ipynb) - [ipynb]
+- [Supplementary Figure S13 - BCBA](https://github.com/BiomedicalMachineLearning/stlearn_manuscript/blob/main/Main_figure_5_PSTS_Cancer_progression/Figure_S13.ipynb) - [ipynb]
 
 ####  Cell-cell interactions/
 
