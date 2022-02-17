@@ -287,3 +287,63 @@ scripts/X5_slideSeq/
         INPUT: * /Volumes/GML001-Q1851/Brad/slideSeq/
                                                   hipp_gridded_45-45_LR-CCI.h5ad
         OUTPUT: * plots/X5_slideSeq/*     
+        
+scripts/X6_breast_cancer_simulation/
+    -> Analysis of simulated breast cancer data.
+
+    X1_breast_spatial_sim.ipynb -> Fits negative binomial to each 
+                           gene/celltype combination & samples to simulate data.
+                 Using HVGs+LR genes, sampling simulated cells w/o replacement,
+	             10,000 single cells simulated, & simulates the same sparsity
+	            between the original single cell data & real data. 
+	             After simulating scRNA-seq, then samples cells from this & adds 
+	             together in defined proportions to create Visium spots. The 
+	             defined proportions change depending on the type of neighbourhood
+	             in a defined grid the spots fall within, to simulate 
+	             colocalisation of cell types. Uses breast scRNA-seq data.
+	             
+	             INPUT: * data/sim_data/breast_sc.h5ad
+                 OUTPUT: * data/sim_data/spatialsim_v2.h5ad
+                     
+    X2_breast_sim_LR-CCI_v2.py -> Runs stLearn LR-CCI on the simulated 
+                                                                   spatial data.
+
+              INPUT: * data/sim_data/spatialsim_v2.h5ad
+              OUTPUT: * data/sim_data/spatialsim_v2.h5ad
+                                             -> Adds the stlearn-LR-CCI results!
+                                                        
+    X3_cellchat_cci_sim.R ->  Running CellChat on the simulated data.
+ 
+             INPUT:  * data/sim_data/spatialsim_v2.h5ad
+             OUTPUT: * data/sim_data/methods_out/cell_chat_ints.txt
+             
+    X4_cellphonedb_cci_sim.py -> Prepares the breast data to be run with 
+                    cellphonedb, then runs for the breast spatial simulated data.
+
+            INPUT: * data/sim_data/spatialsim_v2.h5ad
+            OUTPUT: * data/sim_data/methods_out/cellphonedb/*
+                    * data/sim_data/methods_out/cellphonedb_ints.txt
+
+    X5_singlecellsignalr_sim.R -> Runs SingleCellSignalR on the simulated 
+                                                                   spatial data.
+
+              INPUT: * data/sim_data/spatialsim_v2.h5ad
+              OUTPUT: * data/sim_data/methods_out/singlecellsignalr_ints.txt
+              
+    X6_natmi_sim.py -> Runs the NATMI pipeline on the simulated data.
+
+            INPUT: * data/sim_data/spatialsim_v2.h5ad
+            OUTPUT: * data/sim_data/methods_out/natmi/*
+                    * data/sim_data/methods_out/natmi_ints.txt
+            
+    X7_squidpy_cpdb_sim.py -> Squidpy implementation of CPDB on simulated data.
+
+            INPUT: * data/sim_data/spatialsim_v2.h5ad
+            OUTPUT: * data/sim_data/methods_out/squidpy_ints.txt     
+            
+    X8_method_cci_vis.ipynb -> Visualises results from running the CCI on the 
+                                                                 simulated data.
+
+            INPUT: * data/sim_data/spatialsim_v2.h5ad
+                   * data/sim_data/methods_out/*_ints.txt
+            OUTPUT: * plots/X6_sim_spatial/*
