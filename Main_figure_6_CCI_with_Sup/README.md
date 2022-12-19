@@ -13,9 +13,7 @@ To install python package dependencies, ideally in a conda environment:
 Will also need to install development branch of stlearn:
 
     git clone https://github.com/BiomedicalMachineLearning/stLearn.git
-    git fetch
-    git checkout brad_dev
-    
+
 Then add the path to the cloned github to your system python path.
 
 For information regarding R dependencies, please see:
